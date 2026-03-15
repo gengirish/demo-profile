@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #030014;
+    color: #e2e8f0;
+    font-family: Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0f0f23; }
+  ::-webkit-scrollbar-thumb { background: #00d4ff44; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #00d4ff88; }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #00d4ff, #7c3aed, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass {
+    background: rgba(26,26,46,0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,212,255,0.1);
+  }
+  .glass-card {
+    background: rgba(26,26,46,0.8);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 12px;
+  }
+  .glow-cyan { box-shadow: 0 0 20px rgba(0,212,255,0.3), 0 0 40px rgba(0,212,255,0.1); }
+  .glow-purple { box-shadow: 0 0 20px rgba(124,58,237,0.3), 0 0 40px rgba(124,58,237,0.1); }
+  .section-padding { padding: 5rem 1.5rem; }
+  @media (min-width: 768px) { .section-padding { padding: 6rem 2rem; } }
+}
