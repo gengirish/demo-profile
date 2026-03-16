@@ -1,0 +1,69 @@
+# Cursor Rules — demo-profile (Girish Hiremath AI Portfolio)
+# Enterprise licence: Girish B. Hiremath (gengirish@gmail.com)
+# Built with IntelliForge AI | https://www.intelliforge.tech/
+
+## Role
+You are an expert Next.js 14 + TypeScript engineer working on Girish Hiremath's
+AI-powered digital portfolio — showcasing 14 years of engineering across Banking,
+Pharma, Telecom, Compliance, and AI/ML, plus the BuildwithAiGiri initiative.
+
+## Tech Stack
+- Framework: Next.js 14 (App Router, Server Components)
+- Language: TypeScript (strict mode)
+- Styling: Tailwind CSS with custom neural-* tokens (Cyberpunk Dark theme)
+- Icons: Lucide React
+- AI Chat: OpenRouter API (llama-3.3-70b-instruct) → /api/chat
+- Package manager: npm
+
+## Cyberpunk Dark Theme Palette
+neural-bg: #030014 | neural-surface: #0f0f23 | neural-card: #1a1a2e
+neural-cyan: #00d4ff (primary) | neural-purple: #7c3aed (secondary)
+neural-pink: #f472b6 | neural-green: #34d399 | neural-amber: #fbbf24
+
+Always use neural-* Tailwind tokens. Never use raw hex in className.
+
+## Project Structure
+src/data/resume-data.ts    ← Single source of truth for all profile data
+src/components/            ← One file per section (Navbar, Hero, About, etc.)
+src/app/page.tsx           ← Assembles all sections
+src/app/api/chat/route.ts  ← AI chat API
+src/app/layout.tsx         ← SEO metadata + fonts
+src/app/globals.css        ← Glass / glow / gradient utilities
+
+## Code Conventions
+- 2-space indent, double quotes, semicolons, trailing commas
+- "use client" only when using hooks or browser APIs
+- Arrow function components with inline prop types
+- Default exports for all components
+
+## Component Patterns
+Glass card:     className="glass-card p-6"
+Hover border:   hover:border-neural-cyan/30 transition-all duration-300
+Section header: <h2 className="text-4xl font-bold text-white mb-4">Title <span className="text-gradient">Word</span></h2>
+Divider:        <div className="w-20 h-1 bg-gradient-to-r from-neural-cyan to-neural-purple mx-auto rounded-full" />
+
+## Data Rules
+- NEVER hardcode profile data in components — import from resume-data.ts
+- Domain colors: Banking=#00d4ff | Telecom=#7c3aed | Pharma=#f472b6 | Compliance=#fbbf24 | AI=#00d4ff
+
+## Required Branding (NEVER REMOVE)
+Footer must have:
+  - "Built by IntelliForge AI" → https://www.intelliforge.tech/
+  - BuildwithAiGiri CTA → https://chat.whatsapp.com/LDqzLHYMlhg9GiO0yRrUOS?mode=gi_t
+
+## Environment Variables
+OPENROUTER_API_KEY → .env.local only (gitignored, NEVER commit)
+NEXT_PUBLIC_SITE_URL → canonical URL
+
+## Pre-commit Gate
+npm run lint && npm run build   ← must both pass with 0 errors
+
+## Common Operations
+Update profile     → edit src/data/resume-data.ts
+Add section        → create src/components/NewSection.tsx + import in page.tsx
+Update AI persona  → edit SYSTEM_PROMPT in src/app/api/chat/route.ts
+Change theme       → update neural-* in tailwind.config.ts + rgba in globals.css
+
+## Deployment
+Platform: Vercel | Project: girish-hiremath-profile
+Set OPENROUTER_API_KEY in Vercel dashboard → Settings → Environment Variables
