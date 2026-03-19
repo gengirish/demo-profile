@@ -1,89 +1,166 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
 
-interface Message { role: "user" | "assistant"; content: string; }
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "👋 Hi! I'm Girish's AI assistant. Ask me about his 14-year career, BuildwithAiGiri (25 free AI MVPs!), or any of his projects!" }
-  ]);
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content:
+        "Hi! I'm Sai Ravi Kumar's AI assistant. Ask me anything about his 20+ years of experience in Data Science, Big Data, IoT analytics, and more!",
+    },
+  ]);
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, open]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
-    const userMsg: Message = { role: "user", content: text };
-    const next = [...messages, userMsg];
-    setMessages(next);
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+    const userMessage = input.trim();
     setInput("");
+    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setLoading(true);
+
     try {
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next }) });
-      const data = await res.json();
-      setMessages([...next, { role: "assistant", content: data.message }]);
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, { role: "user", content: userMessage }],
+        }),
+      });
+
+      if (!response.ok) throw new Error("Chat request failed");
+
+      const data = await response.json();
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: data.content || data.message || "I couldn't process that. Please try again." },
+      ]);
     } catch {
-      setMessages([...next, { role: "assistant", content: "Sorry, connection issue. Reach Girish at gengirish@gmail.com!" }]);
-    } finally { setLoading(false); }
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "I'm having trouble connecting right now. Please make sure the OPENROUTER_API_KEY environment variable is set, or try again later!",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {open && (
-        <div className="fixed bottom-24 right-6 z-50 flex flex-col rounded-xl shadow-2xl" style={{ width: "360px", maxWidth: "calc(100vw - 48px)", height: "500px", maxHeight: "80vh", background: "rgba(26,26,46,0.95)", border: "1px solid rgba(0,212,255,0.2)", backdropFilter: "blur(16px)" }}>
-          <div className="flex items-center justify-between p-4" style={{ borderBottom: "1px solid #16213e" }}>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed)" }}>
-                <Bot size={16} className="text-white" />
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-6 z-50 w-[380px] max-h-[520px] flex flex-col rounded-2xl overflow-hidden border border-neural-border/50 bg-neural-bg/95 backdrop-blur-xl shadow-2xl"
+          >
+            <div className="px-4 py-3 border-b border-neural-border/30 bg-neural-surface/50 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bot size={18} className="text-neural-green" />
+                <span className="text-sm font-semibold text-white">
+                  Talk to My Resume
+                </span>
               </div>
-              <div>
-                <div className="text-white font-semibold text-sm">Girish&apos;s AI Assistant</div>
-                <div className="text-xs flex items-center gap-1" style={{ color: "#34d399" }}>
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: "#34d399" }} /> Online
-                </div>
-              </div>
+              <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-white">
+                <X size={18} />
+              </button>
             </div>
-            <button onClick={() => setOpen(false)} style={{ color: "#94a3b8" }}><X size={20} /></button>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
-                  style={msg.role === "user" ? { backgroundColor: "#00d4ff", color: "#030014", fontWeight: 500 } : { background: "rgba(15,15,35,0.8)", color: "#e2e8f0", border: "1px solid rgba(0,212,255,0.1)" }}>
-                  {msg.content}
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px]">
+              {messages.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  {msg.role === "assistant" && (
+                    <div className="w-6 h-6 rounded-full bg-neural-green/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <Bot size={12} className="text-neural-green" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
+                      msg.role === "user"
+                        ? "bg-neural-cyan/20 text-neural-cyan border border-neural-cyan/20"
+                        : "bg-neural-surface/80 text-gray-300 border border-neural-border/20"
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                  {msg.role === "user" && (
+                    <div className="w-6 h-6 rounded-full bg-neural-cyan/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <User size={12} className="text-neural-cyan" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl px-4 py-3" style={{ background: "rgba(15,15,35,0.8)", border: "1px solid rgba(0,212,255,0.1)" }}>
-                  <Loader2 size={16} className="animate-spin" style={{ color: "#00d4ff" }} />
+              ))}
+              {loading && (
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-neural-green/20 flex items-center justify-center flex-shrink-0">
+                    <Bot size={12} className="text-neural-green" />
+                  </div>
+                  <div className="bg-neural-surface/80 border border-neural-border/20 rounded-xl px-4 py-2">
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-neural-green/50 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-2 h-2 bg-neural-green/50 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-2 h-2 bg-neural-green/50 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-          <div className="p-3 flex gap-2" style={{ borderTop: "1px solid #16213e" }}>
-            <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()}
-              placeholder="Ask about Girish's career..."
-              className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none transition-colors"
-              style={{ backgroundColor: "#030014", border: "1px solid #16213e", color: "#e2e8f0" }}
-              onFocus={e => (e.currentTarget.style.borderColor = "#00d4ff")}
-              onBlur={e => (e.currentTarget.style.borderColor = "#16213e")} />
-            <button onClick={send} disabled={loading || !input.trim()} className="p-2 rounded-lg transition-all disabled:opacity-50" style={{ backgroundColor: "#00d4ff", color: "#030014" }}>
-              <Send size={16} />
-            </button>
-          </div>
-        </div>
-      )}
-      <button onClick={() => setOpen(!open)} className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
-        style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed)", boxShadow: "0 0 20px rgba(0,212,255,0.3)" }}>
-        {open ? <X size={22} className="text-white" /> : <MessageCircle size={22} className="text-white" />}
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-3 border-t border-neural-border/30 bg-neural-surface/30">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+                className="flex gap-2"
+              >
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask about Sai's experience..."
+                  className="flex-1 bg-neural-bg/50 border border-neural-border/30 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-neural-cyan/50"
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !input.trim()}
+                  className="p-2 rounded-lg bg-neural-green/20 text-neural-green hover:bg-neural-green/30 transition-colors disabled:opacity-40"
+                >
+                  <Send size={16} />
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        onClick={() => setOpen(!open)}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-neural-green/20 border border-neural-green/30 text-neural-green hover:bg-neural-green/30 transition-all flex items-center justify-center glow-green"
+      >
+        {open ? <X size={22} /> : <MessageCircle size={22} />}
       </button>
     </>
   );

@@ -1,56 +1,81 @@
 "use client";
-import { personalInfo } from "@/data/resume-data";
-import { Cpu } from "lucide-react";
 
-const quickFacts = [
-  "📍 Bengaluru, Karnataka, India",
-  "🎓 MBA — XLRI Jamshedpur (2016)",
-  "🎓 B.Tech — VIT University (2014)",
-  "🏆 AIR 159 — Global Mathematical Talent Probe",
-  "🪖 Twice recommended by Service Selection Board (IAF & Navy)",
-  "👥 12,298+ LinkedIn followers",
-];
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { Briefcase, Brain, Database, Cpu } from "lucide-react";
+import { personalInfo, domains } from "@/data/resume-data";
 
 export default function AboutSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section id="about" className="section-padding" style={{ backgroundColor: "#0f0f23" }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">About <span style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Me</span></h2>
-          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: "linear-gradient(to right,#00d4ff,#7c3aed)" }} />
-        </div>
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          <div>
-            <p className="text-lg leading-relaxed mb-6" style={{ color: "#cbd5e1" }}>{personalInfo.summary}</p>
-            <div className="p-5 mb-6 rounded-xl" style={{ background: "rgba(26,26,46,0.8)", borderLeft: "4px solid #00d4ff", border: "1px solid rgba(0,212,255,0.15)" }}>
-              <div className="flex items-center gap-2 font-semibold mb-2" style={{ color: "#00d4ff" }}>
-                <span>🚀</span><span>Currently Building</span>
-              </div>
-              <div className="text-white font-medium">Cheerio AI — Agentic AI for Enterprise</div>
-              <p className="text-sm mt-2" style={{ color: "#94a3b8" }}>{personalInfo.currentPursuit}</p>
-            </div>
-            <div className="p-5 rounded-xl" style={{ background: "rgba(26,26,46,0.8)", borderLeft: "4px solid #7c3aed", border: "1px solid rgba(124,58,237,0.2)" }}>
-              <div className="flex items-center gap-2 font-semibold mb-2" style={{ color: "#7c3aed" }}>
-                <Cpu size={16} /><span>🚀 BuildwithAiGiri Initiative</span>
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: "#cbd5e1" }}>
-                A 25-week commitment to build 25 AI-powered MVPs completely free — 1-hour brainstorm, 7 days of development, full code handover. No fees. No equity. Just building things that matter.
+    <section id="about" className="py-24 relative" ref={ref}>
+      <div className="max-w-6xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-neural-green/50 to-transparent" />
+            <h2 className="text-sm font-mono text-neural-green tracking-wider uppercase">
+              About
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-l from-neural-green/50 to-transparent" />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 mt-12">
+            <div>
+              <h3 className="text-3xl font-bold text-white mb-6">
+                Transforming Data Into
+                <span className="text-gradient"> Intelligent Systems</span>
+              </h3>
+              <p className="text-gray-400 leading-relaxed mb-6">
+                {personalInfo.summary}
               </p>
-              <a href="https://chat.whatsapp.com/LDqzLHYMlhg9GiO0yRrUOS?mode=gi_t" target="_blank" rel="noopener noreferrer"
-                className="inline-block mt-3 text-xs transition-colors" style={{ color: "#7c3aed" }}>
-                Join the community →
-              </a>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { icon: Brain, label: "Data Science", desc: "ML & Predictive Modeling" },
+                  { icon: Database, label: "Big Data", desc: "Hadoop & Spark Ecosystem" },
+                  { icon: Cpu, label: "IoT Analytics", desc: "Real-time Sensor Streams" },
+                  { icon: Briefcase, label: "20+ Years", desc: "Enterprise Experience" },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    className="glass-card rounded-xl p-4"
+                  >
+                    <item.icon className="text-neural-cyan mb-2" size={20} />
+                    <div className="text-sm font-semibold text-white">{item.label}</div>
+                    <div className="text-xs text-gray-500">{item.desc}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">Industry Domains</h4>
+              <div className="grid grid-cols-2 gap-3">
+                {domains.map((domain, i) => (
+                  <motion.div
+                    key={domain.name}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.3 + i * 0.08 }}
+                    className="flex items-center gap-3 glass-card rounded-lg px-4 py-3"
+                  >
+                    <span className="text-xl">{domain.icon}</span>
+                    <span className="text-sm text-gray-300">{domain.name}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
-          <div>
-            <div className="p-5 rounded-xl" style={{ background: "rgba(26,26,46,0.8)", border: "1px solid rgba(0,212,255,0.15)" }}>
-              <div className="text-white font-semibold mb-4">Quick Facts</div>
-              <ul className="space-y-2 text-sm" style={{ color: "#94a3b8" }}>
-                {quickFacts.map((f, i) => <li key={i}>{f}</li>)}
-              </ul>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

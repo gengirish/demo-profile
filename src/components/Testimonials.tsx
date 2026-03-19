@@ -1,33 +1,43 @@
 "use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { testimonials } from "@/data/resume-data";
 import { Quote } from "lucide-react";
 
 export default function Testimonials() {
-  if (!testimonials.length) return null;
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section id="testimonials" className="section-padding" style={{ backgroundColor: "#0f0f23" }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">What People <span style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Say</span></h2>
-          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: "linear-gradient(to right,#00d4ff,#7c3aed)" }} />
-          <p className="mt-4" style={{ color: "#94a3b8" }}>From investors and enterprise customers who have partnered with Avinash</p>
+    <section className="py-24 relative" ref={ref}>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="flex items-center gap-3 mb-12">
+          <div className="h-px flex-1 bg-gradient-to-r from-neural-pink/50 to-transparent" />
+          <h2 className="text-sm font-mono text-neural-pink tracking-wider uppercase">
+            Testimonials
+          </h2>
+          <div className="h-px flex-1 bg-gradient-to-l from-neural-pink/50 to-transparent" />
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
+
+        <div className="grid md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <div key={i} className="p-6 rounded-xl" style={{ background: "rgba(26,26,46,0.8)", border: "1px solid rgba(0,212,255,0.15)", backdropFilter: "blur(16px)" }}>
-              <Quote size={28} style={{ color: "rgba(0,212,255,0.3)" }} className="mb-4" />
-              <p className="leading-relaxed mb-6 italic" style={{ color: "#cbd5e1" }}>{t.text}</p>
-              <div className="flex items-center gap-3 pt-4" style={{ borderTop: "1px solid #16213e" }}>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed)" }}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <div className="text-white font-semibold text-sm">{t.name}</div>
-                  <div className="text-xs" style={{ color: "#64748b" }}>{t.relation}</div>
-                </div>
+            <motion.div
+              key={t.author}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.15 }}
+              className="glass-card rounded-2xl p-6 relative"
+            >
+              <Quote className="text-neural-pink/20 mb-4" size={32} />
+              <p className="text-sm text-gray-300 leading-relaxed mb-6 italic">
+                &ldquo;{t.text}&rdquo;
+              </p>
+              <div className="border-t border-neural-border/30 pt-4">
+                <p className="text-sm font-semibold text-white">{t.author}</p>
+                <p className="text-xs text-gray-500">{t.relationship}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

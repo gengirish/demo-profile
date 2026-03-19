@@ -1,44 +1,54 @@
 "use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { skillCategories } from "@/data/resume-data";
 
-const CAT_COLORS = ["#00d4ff", "#7c3aed", "#f472b6", "#34d399", "#fb923c", "#a78bfa"];
-
 export default function SkillsSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section id="skills" className="section-padding" style={{ backgroundColor: "#030014" }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">Skills & <span style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Expertise</span></h2>
-          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: "linear-gradient(to right,#00d4ff,#7c3aed)" }} />
-          <p className="mt-4 max-w-xl mx-auto" style={{ color: "#94a3b8" }}>8+ years spanning enterprise consulting, B2B SaaS GTM, and agentic AI product building.</p>
+    <section id="skills" className="py-24 relative" ref={ref}>
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center gap-3 mb-12">
+          <div className="h-px flex-1 bg-gradient-to-r from-neural-cyan/50 to-transparent" />
+          <h2 className="text-sm font-mono text-neural-cyan tracking-wider uppercase">
+            Technical Skills
+          </h2>
+          <div className="h-px flex-1 bg-gradient-to-l from-neural-cyan/50 to-transparent" />
         </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillCategories.map((cat, i) => {
-            const color = CAT_COLORS[i % CAT_COLORS.length];
-            return (
-              <div key={i} className="p-6 rounded-xl transition-all duration-300"
-                style={{ background: "rgba(26,26,46,0.8)", border: "1px solid rgba(0,212,255,0.15)", backdropFilter: "blur(16px)" }}>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-3xl">{cat.icon}</span>
-                  <h3 className="text-white font-semibold text-lg">{cat.name}</h3>
-                </div>
-                <div className="space-y-3">
-                  {cat.skills.map(skill => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span style={{ color: "#cbd5e1" }}>{skill.name}</span>
-                        <span className="font-mono" style={{ color }}>{skill.level}%</span>
-                      </div>
-                      <div className="w-full rounded-full h-1.5" style={{ backgroundColor: "#030014" }}>
-                        <div className="h-1.5 rounded-full transition-all"
-                          style={{ width: `${skill.level}%`, backgroundColor: color }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          {skillCategories.map((category, i) => (
+            <motion.div
+              key={category.name}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.1 }}
+              className="glass-card rounded-2xl p-6 hover:border-neural-cyan/30 transition-all group"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">{category.icon}</span>
+                <h3 className="font-semibold text-white">{category.name}</h3>
               </div>
-            );
-          })}
+              <div className="flex flex-wrap gap-2">
+                {category.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1.5 text-xs rounded-full border transition-all"
+                    style={{
+                      borderColor: `${category.color}33`,
+                      color: category.color,
+                      backgroundColor: `${category.color}10`,
+                    }}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

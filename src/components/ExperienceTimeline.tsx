@@ -1,69 +1,124 @@
 "use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { experience } from "@/data/resume-data";
 
-const ERA_COLORS: Record<string, string> = {
-  "Foundation": "#34d399",
-  "Early Career": "#00d4ff",
-  "HRTech": "#7c3aed",
-  "Founder Mode": "#f472b6",
-};
-const DEFAULT_COLOR = "#00d4ff";
-
 export default function ExperienceTimeline() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [expanded, setExpanded] = useState<number | null>(0);
+
   return (
-    <section id="experience" className="section-padding" style={{ backgroundColor: "#0f0f23" }}>
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">Career <span style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Timeline</span></h2>
-          <div className="w-20 h-1 mx-auto rounded-full" style={{ background: "linear-gradient(to right,#00d4ff,#7c3aed)" }} />
-          <p className="mt-4" style={{ color: "#94a3b8" }}>From XLRI MBA to co-founding an agentic AI company — 8 years of building enterprise value</p>
+    <section id="experience" className="py-24 relative" ref={ref}>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="flex items-center gap-3 mb-12">
+          <div className="h-px flex-1 bg-gradient-to-r from-neural-purple/50 to-transparent" />
+          <h2 className="text-sm font-mono text-neural-purple tracking-wider uppercase">
+            Career Timeline
+          </h2>
+          <div className="h-px flex-1 bg-gradient-to-l from-neural-purple/50 to-transparent" />
         </div>
+
         <div className="relative">
-          <div className="absolute w-px top-0 bottom-0" style={{ left: "24px", background: "linear-gradient(to bottom,#00d4ff44,#7c3aed44,#f472b644)" }} />
-          <div className="space-y-10">
-            {[...experience].reverse().map((exp, i) => {
-              const color = ERA_COLORS[exp.era] ?? DEFAULT_COLOR;
-              return (
-                <div key={i} className="relative pl-16">
-                  <div className="absolute w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                    style={{ left: "15px", top: "20px", borderColor: color, backgroundColor: `${color}22` }}>
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-neural-green via-neural-cyan to-neural-purple/30" />
+
+          {experience.map((role, i) => (
+            <motion.div
+              key={role.period}
+              initial={{ opacity: 0, x: -30 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: i * 0.15 }}
+              className="relative pl-12 md:pl-20 mb-8"
+            >
+              <div
+                className="absolute left-2 md:left-6 top-6 w-4 h-4 rounded-full border-2"
+                style={{
+                  borderColor: role.domainColor,
+                  backgroundColor: expanded === i ? role.domainColor : "transparent",
+                  boxShadow: expanded === i ? `0 0 12px ${role.domainColor}50` : "none",
+                }}
+              />
+
+              <div
+                className={`glass-card rounded-2xl p-6 cursor-pointer transition-all ${
+                  expanded === i ? "border-neural-cyan/30" : ""
+                }`}
+                onClick={() => setExpanded(expanded === i ? null : i)}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1 flex-wrap">
+                      <span
+                        className="px-2 py-0.5 text-xs rounded font-mono"
+                        style={{
+                          backgroundColor: `${role.domainColor}20`,
+                          color: role.domainColor,
+                        }}
+                      >
+                        Epoch {role.epoch}
+                      </span>
+                      <span className="text-xs text-gray-500 font-mono">{role.phase}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white mt-2">{role.title}</h3>
+                    <p className="text-neural-cyan text-sm">{role.company}</p>
+                    <p className="text-xs text-gray-500 mt-1">{role.period}</p>
                   </div>
-                  <div className="p-6 rounded-xl" style={{ background: "rgba(26,26,46,0.8)", border: "1px solid rgba(0,212,255,0.15)", backdropFilter: "blur(16px)" }}>
-                    <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                      <div>
-                        <h3 className="text-white font-bold text-lg">{exp.title}</h3>
-                        <div className="text-sm" style={{ color: "#64748b" }}>{exp.company}</div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-3 text-xs">
+                      <div className="text-center">
+                        <div className="font-mono text-neural-green font-bold">
+                          {role.accuracy}%
+                        </div>
+                        <div className="text-gray-600">accuracy</div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-xs font-mono" style={{ color: "#64748b" }}>{exp.period}</div>
-                        <span className="px-2 py-1 rounded-full text-xs mt-1 inline-block"
-                          style={{ color, backgroundColor: `${color}15`, border: `1px solid ${color}33` }}>
-                          {exp.era}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-sm leading-relaxed mb-4" style={{ color: "#94a3b8" }}>{exp.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {exp.tech.map(t => (
-                        <span key={t} className="px-2 py-0.5 text-xs rounded border font-mono"
-                          style={{ color: "#94a3b8", backgroundColor: "#030014", borderColor: "#16213e" }}>{t}</span>
-                      ))}
-                    </div>
-                    <div className="pt-4" style={{ borderTop: "1px solid #16213e" }}>
-                      <div className="flex justify-between text-xs mb-1" style={{ color: "#64748b" }}>
-                        <span>Career Progression</span>
-                        <span className="font-mono" style={{ color }}>{Math.round(exp.accuracy * 100)}%</span>
-                      </div>
-                      <div className="w-full rounded-full h-1.5" style={{ backgroundColor: "#030014" }}>
-                        <div className="h-1.5 rounded-full" style={{ width: `${exp.accuracy * 100}%`, backgroundColor: color }} />
+                      <div className="text-center">
+                        <div className="font-mono text-neural-pink font-bold">
+                          {role.loss.toFixed(2)}
+                        </div>
+                        <div className="text-gray-600">loss</div>
                       </div>
                     </div>
+                    {expanded === i ? (
+                      <ChevronUp size={18} className="text-gray-500" />
+                    ) : (
+                      <ChevronDown size={18} className="text-gray-500" />
+                    )}
                   </div>
                 </div>
-              );
-            })}
-          </div>
+
+                {expanded === i && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="mt-4 pt-4 border-t border-neural-border/30"
+                  >
+                    <p className="text-gray-400 text-sm mb-4">{role.description}</p>
+                    <ul className="space-y-2 mb-4">
+                      {role.highlights.map((h, j) => (
+                        <li key={j} className="text-sm text-gray-300 flex items-start gap-2">
+                          <span className="text-neural-green mt-1">▸</span>
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-2">
+                      {role.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="px-2 py-1 text-xs rounded bg-neural-surface/80 text-neural-cyan border border-neural-border/30"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

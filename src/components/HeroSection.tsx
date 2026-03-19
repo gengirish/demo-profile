@@ -1,97 +1,123 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { Github, Linkedin, Mail, MapPin, ChevronDown } from "lucide-react";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { MapPin, Linkedin, ChevronDown } from "lucide-react";
 import { personalInfo, stats } from "@/data/resume-data";
 
-const roles = ["Co-founder @ Cheerio AI", "Enterprise AI Strategist", "XLRI MBA | 8+ Years", "B2B SaaS Builder", "Agentic AI Pioneer"];
+const roles = [
+  "Data Scientist",
+  "ML Engineer",
+  "Big Data Architect",
+  "IoT Analytics Leader",
+  "Technical Specialist",
+];
 
 export default function HeroSection() {
-  const [displayed, setDisplayed] = useState("");
-  const stateRef = useRef({ roleIdx: 0, typing: true });
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      const { roleIdx, typing } = stateRef.current;
-      const role = roles[roleIdx];
-      if (typing) {
-        if (displayed.length < role.length) {
-          setDisplayed(role.slice(0, displayed.length + 1));
-          timerId = setTimeout(tick, 65);
+    const currentRole = roles[roleIndex];
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          setDisplayText(currentRole.slice(0, displayText.length + 1));
+          if (displayText.length === currentRole.length) {
+            setTimeout(() => setIsDeleting(true), 1500);
+          }
         } else {
-          timerId = setTimeout(() => { stateRef.current.typing = false; tick(); }, 1800);
+          setDisplayText(currentRole.slice(0, displayText.length - 1));
+          if (displayText.length === 0) {
+            setIsDeleting(false);
+            setRoleIndex((prev) => (prev + 1) % roles.length);
+          }
         }
-      } else {
-        if (displayed.length > 0) {
-          setDisplayed(prev => prev.slice(0, -1));
-          timerId = setTimeout(tick, 35);
-        } else {
-          stateRef.current.roleIdx = (roleIdx + 1) % roles.length;
-          stateRef.current.typing = true;
-          tick();
-        }
-      }
-    };
-    timerId = setTimeout(tick, 80);
-    return () => clearTimeout(timerId);
-   
-  }, [displayed]);
+      },
+      isDeleting ? 40 : 80
+    );
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, roleIndex]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16" style={{ backgroundColor: "#030014" }}>
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full pointer-events-none" style={{ background: "rgba(0,212,255,0.04)", filter: "blur(120px)" }} />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full pointer-events-none" style={{ background: "rgba(124,58,237,0.04)", filter: "blur(120px)" }} />
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-mono mb-8" style={{ border: "1px solid rgba(0,212,255,0.3)", background: "rgba(0,212,255,0.05)", color: "#00d4ff" }}>
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#34d399" }} />
-          Building Cheerio AI · Agentic AI for Enterprise
-        </div>
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-4">
-          {personalInfo.name.split(" ")[0]}{" "}
-          <span style={{ background: "linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-            {personalInfo.name.split(" ").slice(1).join(" ")}
-          </span>
-        </h1>
-        <div className="h-12 flex items-center justify-center mb-6">
-          <span className="text-xl md:text-2xl font-mono" style={{ color: "#00d4ff" }}>
-            {displayed}<span className="animate-pulse">|</span>
-          </span>
-        </div>
-        <p className="text-lg max-w-2xl mx-auto mb-4" style={{ color: "#94a3b8" }}>{personalInfo.tagline}</p>
-        <div className="flex items-center justify-center gap-2 text-sm mb-10" style={{ color: "#64748b" }}>
-          <MapPin size={14} /><span>{personalInfo.location}</span>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-          <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 font-semibold rounded-lg transition-all duration-200"
-            style={{ backgroundColor: "#00d4ff", color: "#030014", boxShadow: "0 0 20px rgba(0,212,255,0.3)" }}>
-            <Linkedin size={18} /> LinkedIn
-          </a>
-          <a href={personalInfo.github} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200"
-            style={{ border: "1px solid #7c3aed", color: "#7c3aed" }}>
-            <Github size={18} /> GitHub
-          </a>
-          <a href={`mailto:${personalInfo.email}`}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200"
-            style={{ border: "1px solid #16213e", color: "#cbd5e1" }}>
-            <Mail size={18} /> Email Me
-          </a>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          {stats.map((stat, i) => (
-            <div key={i} className="p-4 text-center rounded-xl" style={{ background: "rgba(26,26,46,0.8)", border: "1px solid rgba(0,212,255,0.15)", backdropFilter: "blur(16px)" }}>
-              <div className="text-3xl font-bold font-mono" style={{ color: "#00d4ff" }}>{stat.value}</div>
-              <div className="text-sm mt-1" style={{ color: "#94a3b8" }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-16 flex justify-center">
-          <a href="#about" className="transition-colors animate-bounce" style={{ color: "#64748b" }}>
-            <ChevronDown size={28} />
-          </a>
-        </div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neural-green/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-neural-cyan/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-neural-purple/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s" }} />
       </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 text-sm text-neural-cyan">
+            <MapPin size={14} />
+            {personalInfo.location}
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 tracking-tight">
+            <span className="text-white">{personalInfo.name.split(" ").slice(0, -1).join(" ")}</span>
+            <br />
+            <span className="text-gradient">{personalInfo.name.split(" ").slice(-1)}</span>
+          </h1>
+
+          <div className="h-12 flex items-center justify-center mb-6">
+            <span className="font-mono text-xl md:text-2xl text-neural-green">
+              {displayText}
+              <span className="inline-block w-0.5 h-6 bg-neural-green ml-1 animate-pulse" />
+            </span>
+          </div>
+
+          <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+            {personalInfo.tagline}
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
+            <a
+              href={personalInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neural-green/10 border border-neural-green/30 text-neural-green hover:bg-neural-green/20 transition-all hover:glow-green"
+            >
+              <Linkedin size={18} />
+              LinkedIn Profile
+            </a>
+            <a
+              href="#experience"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg glass-card text-gray-300 hover:text-neural-cyan transition-all"
+            >
+              View Career Journey
+            </a>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                className="glass-card rounded-xl p-4"
+              >
+                <div className="text-3xl font-bold text-gradient">{stat.value}</div>
+                <div className="text-xs text-gray-500 mt-1">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+      >
+        <ChevronDown className="text-neural-cyan/40" size={28} />
+      </motion.div>
     </section>
   );
 }

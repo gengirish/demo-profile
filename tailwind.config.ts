@@ -10,38 +10,49 @@ const config: Config = {
     extend: {
       colors: {
         neural: {
-          bg: "#030014",
-          surface: "#0f0f23",
-          card: "#1a1a2e",
-          border: "#16213e",
-          cyan: "#00d4ff",
-          purple: "#7c3aed",
-          pink: "#f472b6",
-          green: "#34d399",
-          amber: "#fbbf24",
+          bg: "#022c22",
+          surface: "#064e3b",
+          card: "#065f46",
+          border: "#047857",
+          cyan: "#2dd4bf",
+          purple: "#a78bfa",
+          pink: "#fb7185",
+          green: "#4ade80",
+          amber: "#facc15",
         },
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       animation: {
+        "fade-in": "fadeIn 0.5s ease-out",
+        "slide-up": "slideUp 0.6s ease-out",
         "pulse-slow": "pulse 3s ease-in-out infinite",
-        float: "float 6s ease-in-out infinite",
-        glow: "glow 2s ease-in-out infinite alternate",
+        "float": "float 6s ease-in-out infinite",
+        "glow": "glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
         },
         glow: {
-          from: { boxShadow: "0 0 10px rgba(0,212,255,0.3)" },
-          to: { boxShadow: "0 0 20px rgba(0,212,255,0.6), 0 0 40px rgba(0,212,255,0.2)" },
+          "0%": { boxShadow: "0 0 5px rgba(45, 212, 191, 0.2)" },
+          "100%": { boxShadow: "0 0 20px rgba(45, 212, 191, 0.4)" },
         },
       },
     },
   },
   plugins: [],
 };
+
 export default config;

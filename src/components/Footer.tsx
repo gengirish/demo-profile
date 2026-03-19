@@ -1,67 +1,72 @@
 "use client";
+
+import { Linkedin, MapPin, Mail } from "lucide-react";
 import { personalInfo } from "@/data/resume-data";
-import { Linkedin, Mail, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer id="contact" style={{ backgroundColor: "#030014", borderTop: "1px solid #16213e" }}>
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-10 mb-12">
-          <div>
-            <div className="font-mono font-bold text-xl mb-3" style={{ color: "#00d4ff" }}>avinash.ai</div>
-            <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>
-              Co-founder @ Cheerio AI — Agentic AI for enterprise workflows.
-              ₹8Cr seed raised · 150+ enterprises · XLRI MBA.
-            </p>
-          </div>
-          <div>
-            <div className="text-white font-semibold mb-4">Quick Links</div>
-            <ul className="space-y-2 text-sm" style={{ color: "#94a3b8" }}>
-              {["About", "Skills", "Experience", "Projects", "Testimonials"].map(l => (
-                <li key={l}><a href={`#${l.toLowerCase()}`} style={{ color: "#94a3b8" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#00d4ff")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}>{l}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="text-white font-semibold mb-4">Connect</div>
-            <div className="space-y-3">
-              {[
-                { href: personalInfo.linkedin, icon: <Linkedin size={16} />, label: "LinkedIn — Avinash Upadhyay" },
-                { href: `mailto:${personalInfo.email}`, icon: <Mail size={16} />, label: personalInfo.email },
-              ].map(link => (
-                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm transition-colors"
-                  style={{ color: "#94a3b8" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#00d4ff")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}>
-                  {link.icon} {link.label}
-                </a>
-              ))}
-            </div>
-            <div className="mt-5 p-4 rounded-lg" style={{ border: "1px solid rgba(124,58,237,0.3)", background: "rgba(124,58,237,0.05)" }}>
-              <div className="text-sm font-semibold mb-1" style={{ color: "#7c3aed" }}>🚀 Want a profile like this?</div>
-              <a href="https://chat.whatsapp.com/LDqzLHYMlhg9GiO0yRrUOS?mode=gi_t" target="_blank" rel="noopener noreferrer"
-                className="text-xs transition-colors" style={{ color: "#94a3b8" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#7c3aed")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}>
-                Join the BuildwithAiGiri community →
-              </a>
-            </div>
-          </div>
+    <footer id="contact" className="py-20 border-t border-neural-border/30">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Let&apos;s <span className="text-gradient">Connect</span>
+          </h2>
+          <p className="text-gray-400 max-w-lg mx-auto">
+            Interested in data science, IoT analytics, or Big Data solutions?
+            I&apos;d love to connect and discuss how data can drive your business forward.
+          </p>
         </div>
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ borderTop: "1px solid #16213e", color: "#64748b" }}>
-          <div className="flex items-center gap-1">
-            <span>© {new Date().getFullYear()} Avinash Upadhyay. Made with</span>
-            <Heart size={14} style={{ color: "#f472b6", fill: "#f472b6" }} />
-          </div>
-          <a href="https://www.intelliforge.tech/" target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1 transition-colors" style={{ color: "#64748b" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#00d4ff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#64748b")}>
-            Built by <span className="font-semibold ml-1" style={{ color: "#00d4ff" }}>IntelliForge AI</span>
+
+        <div className="flex flex-wrap justify-center gap-6 mb-12">
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl glass-card hover:border-neural-cyan/30 transition-all text-gray-300 hover:text-neural-cyan"
+          >
+            <Linkedin size={18} />
+            LinkedIn
           </a>
+          <div className="flex items-center gap-2 px-6 py-3 rounded-xl glass-card text-gray-400">
+            <MapPin size={18} />
+            {personalInfo.location}
+          </div>
+          {personalInfo.email && (
+            <a
+              href={`mailto:${personalInfo.email}`}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl glass-card hover:border-neural-cyan/30 transition-all text-gray-300 hover:text-neural-cyan"
+            >
+              <Mail size={18} />
+              {personalInfo.email}
+            </a>
+          )}
+        </div>
+
+        <div className="text-center">
+          <div className="font-mono text-2xl font-bold text-gradient mb-4">
+            SRK.
+          </div>
+          <p className="text-xs text-gray-600">
+            &copy; {new Date().getFullYear()} {personalInfo.name}. Built with Neural AI.
+          </p>
+          <a
+            href="https://www.intelliforge.tech/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 text-xs text-neural-cyan hover:text-neural-green transition-colors"
+          >
+            Built by IntelliForge AI
+          </a>
+          <div className="mt-2">
+            <a
+              href="https://chat.whatsapp.com/LDqzLHYMlhg9GiO0yRrUOS?mode=gi_t"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-gray-500 hover:text-neural-purple transition-colors"
+            >
+              Want a profile like this? Join our WhatsApp group
+            </a>
+          </div>
         </div>
       </div>
     </footer>
