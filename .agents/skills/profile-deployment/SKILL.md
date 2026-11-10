@@ -28,6 +28,8 @@ Deployment Checklist:
 - [ ] layout.tsx metadata updated with client info
 - [ ] Theme applied and globals.css updated
 - [ ] AI chat system prompt configured
+- [ ] Astryx checklist in `astryx-ui` skill passes (layer order, dark mode, mobile, keyboard)
+- [ ] `@astryxdesign/*` packages are in `dependencies` (not only devDependencies), except `@astryxdesign/cli`
 - [ ] OG image route updated
 - [ ] Project/repo/deployment uses `[person-name]-profile` naming
 - [ ] `npm run build` succeeds with no errors
