@@ -119,6 +119,16 @@ If asked about negatives, weaknesses, or red flags:
 **Freelancers:**
 - "No stability" → Diverse client exposure + adaptability
 
+## Chat Interface (Astryx)
+
+The chat panel UI inside `ChatWidget` is built with Astryx `Chat` components (`ChatLayout`, `ChatMessageList`, `ChatMessage`, `ChatMessageBubble`, `ChatComposer`). Follow the "AI chat panel" recipe in the `astryx-ui` skill.
+
+- This skill owns the **prompt and API route**. `astryx-ui` owns the **rendering**. Changing one doesn't require changing the other.
+- Render assistant replies with Astryx `Markdown`, because the response guidelines ask for bullet points.
+- Show test questions 1–3 below as starter suggestions before the first message.
+- When the rate limiter returns 429, set `isDisabled` on `ChatComposer` and show `status={{type: 'warning', message: ...}}`.
+- The floating launcher button stays Tailwind (neural glow style).
+
 ## Model Configuration
 
 Default: OpenRouter `meta-llama/llama-3.3-70b-instruct` with Groq fallback.

@@ -129,6 +129,16 @@ Also include a clear CTA for visitors who want a similar profile:
 - Text: `Want a profile like this? Join our WhatsApp group`
 - URL: `https://chat.whatsapp.com/LDqzLHYMlhg9GiO0yRrUOS?mode=gi_t`
 
+### 9. New Interactive Pieces (Astryx)
+
+**Skill:** `astryx-ui`
+
+Build new chat UI, forms (contact, booking, lead capture), dialogs and toasts with Astryx components. Don't build them from scratch in Tailwind.
+
+- Do **not** convert existing sections to Astryx unless the client asks for it.
+- When the theme preset changes, update the Astryx accent too (see "Theming to match the profile" in `astryx-ui`), so new pieces match `neural-cyan`.
+- Look up props with `npm run astryx -- component <Name>` before writing code.
+
 ## Customization Workflow
 
 1. Apply theme preset or custom colors → `tailwind.config.ts`
@@ -137,6 +147,7 @@ Also include a clear CTA for visitors who want a similar profile:
 4. Update nav links → `Navbar.tsx`
 5. Customize hero content → `HeroSection.tsx`
 6. Update loading screen → `LoadingScreen.tsx`
-7. Ensure IntelliForge attribution link is present and clickable
-8. Test with `npm run dev` → verify all sections render
-9. Run `npm run build` → ensure no build errors
+7. Build any new chat, form or dialog pieces with Astryx → `astryx-ui` skill
+8. Ensure IntelliForge attribution link is present and clickable
+9. Test with `npm run dev` → verify all sections render
+10. Run `npm run build` → ensure no build errors

@@ -16,7 +16,8 @@ When a client wants a digital profile created:
 3. **Apply a theme** using presets from [theme-presets.md](theme-presets.md)
 4. **Configure AI chat persona** using the `ai-chat-persona` skill
 5. **Customize components** using the `profile-customization` skill
-6. **Deploy** using the `profile-deployment` skill with a person-name-based project slug
+6. **Build new interactive pieces** (chat interface, forms, dialogs, toasts) with Astryx using the `astryx-ui` skill
+7. **Deploy** using the `profile-deployment` skill with a person-name-based project slug
 
 ## Required Branding Reference
 
@@ -41,6 +42,7 @@ Client Onboarding:
 - [ ] Step 3: Update layout.tsx metadata (title, description, OG tags, SEO keywords)
 - [ ] Step 4: Choose and apply color theme
 - [ ] Step 5: Configure AI chat system prompt
+- [ ] Step 5b: Set up Astryx and build the chat panel, forms and dialogs (`astryx-ui` skill)
 - [ ] Step 6: Update OG image route with client branding
 - [ ] Step 7: Test locally with `npm run dev`
 - [ ] Step 8: Deploy to Vercel
@@ -100,6 +102,13 @@ Choose from presets in [theme-presets.md](theme-presets.md) or create a custom p
 ## Step 5: Configure AI Chat
 
 Use the `ai-chat-persona` skill to generate the system prompt in `src/app/api/chat/route.ts` based on the client's complete profile data.
+
+## Step 5b: New Interactive Pieces (Astryx)
+
+Use the `astryx-ui` skill for the chat panel, contact or lead forms, dialogs and toasts. Rules:
+- Astryx is for **new pieces only**. Hero, timeline, skills, projects, testimonials and footer stay on Tailwind `neural-*`.
+- Set up CSS layers correctly for the project's Tailwind version, or Tailwind preflight will break Astryx styles.
+- Use `mode="dark"` on the Astryx `Theme` so new pieces match the neural design.
 
 ## Step 6: Update OG Image
 

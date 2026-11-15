@@ -25,6 +25,7 @@ Built following the [Agent Skills](https://github.com/anthropics/skills) pattern
 | [profile-customization](profile-customization/) | Theme, colors, typography, and section customization |
 | [ai-chat-persona](ai-chat-persona/) | AI chat assistant persona and system prompt configuration |
 | [profile-deployment](profile-deployment/) | Vercel deployment, custom domains, and environment setup |
+| [astryx-ui](astryx-ui/) | [Astryx](https://github.com/meta/astryx) components for new pieces only: chat interface, forms, dialogs, toasts |
 
 ## Quick Start
 
@@ -56,8 +57,10 @@ The agent will automatically:
 │   └── SKILL.md                       # Design and component customization
 ├── ai-chat-persona/
 │   └── SKILL.md                       # AI chat system prompt generation
-└── profile-deployment/
-    └── SKILL.md                       # Deployment to Vercel
+├── profile-deployment/
+│   └── SKILL.md                       # Deployment to Vercel
+└── astryx-ui/
+    └── SKILL.md                       # Astryx setup + chat/form/dialog recipes
 ```
 
 ## Business Model
@@ -71,7 +74,8 @@ The agent will automatically:
 ## Tech Stack
 
 - **Framework**: Next.js 16 + React 19
-- **Styling**: Tailwind CSS + Framer Motion
+- **Styling**: Tailwind CSS + Framer Motion (existing sections)
+- **New UI pieces**: [Astryx](https://github.com/meta/astryx) (`@astryxdesign/core`) for chat interface, forms, dialogs and toasts
 - **AI Chat**: Vercel AI SDK + OpenRouter (Llama 3.3 70B)
 - **Deployment**: Vercel
 - **Rate Limiting**: Upstash Redis (optional)
